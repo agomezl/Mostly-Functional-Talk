@@ -1,0 +1,252 @@
+\documentclass[rail]{beamer}
+%\documentclass[handout]{beamer}
+\usecolortheme[RGB={153,0,0}]{structure}
+\usetheme{Rochester}
+%\useinnertheme{rounded}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\useinnertheme{rectangles}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{natbib}
+\usepackage{bibentry}
+\usepackage{color}
+\usepackage[spanish]{babel}
+\usepackage{amssymb,latexsym}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{alltt}
+
+\setbeamertemplate{navigation symbols}{}
+%\bibliography{Erlang}
+
+\lstdefinestyle{style1}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  xleftmargin=\parindent,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily\color{blue},
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{black},
+  stringstyle    =\color{red},
+}
+\lstset{style=style1,escapeinside=@@}%
+
+
+\title{``Mostly functional'' programming}
+\subtitle{does not work}
+\author{Alejandro Gómez-Londoño}
+\date{31th March, 2014}
+\institute{EAFIT University}
+
+\begin{document}
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Introduction}
+  \begin{quote}
+    ``Conventional programming languages are large, complex, and
+    inflexible. Their limited expressive power is inadequate to
+    justify their size and cost.''\footnote[frame,1] {John
+      Backus. 1978. Can programming be liberated from the von Neumann
+      style?: a functional style and its algebra of
+      programs. Commun. ACM 21, 8 (August 1978), 613-641}
+  \end{quote}
+\end{frame}
+
+\begin{frame}[fragile]{Introduction}
+
+  \begin{lstlisting}[language=C]
+    void foo(int * arr, int len){
+      int i;
+      for(i=0;i<len;i++)
+        arr[i] += 1;
+    }
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}[language=Haskell]
+    foo :: (Num a) => [a] -> [a]
+    foo arr = map (+1) arr
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Imperative programming}
+  \begin{quote}
+    ``\dots is a programming paradigm that describes computation in terms
+    of statements that change a program state''\footnote[frame,1]
+    {Wikipedia contributors, ``Imperative programming''.
+      Wikipedia, The Free Encyclopedia (Accessed June 16, 2014)}
+  \end{quote}
+  \pause
+  \begin{itemize}[<+->]
+  \item There is a global state.
+  \item Variables $\approx$ storage cells.
+  \item Assignments statements $\approx$ fetching and storing.
+  \item Control statements $\approx$ Jump and test instructions.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Imperative programming}{The problem}
+  \begin{quote}
+    ``In a parallel/concurrent/distributed world, however, a single
+    global state is an unacceptable bottleneck.so the foundational
+    assumption of imperative programming that underpins most
+    contemporary programming languages is starting to crumble''
+  \end{quote}
+
+\end{frame}
+
+
+\begin{frame}{Functional programming}
+  \begin{quote}
+    ``\dots is a style of programming which models computations as the
+    evaluation of expressions''\footnote[frame,1]
+    {HaskellWiki contributors, ``Functional programming'',
+      HaskellWiki, Haskell.org (Accessed June 16, 2014)}
+  \end{quote}
+  \begin{itemize}[<+->]
+  \item Higher-order functions
+  \item Immutable data
+  \item Referential transparency
+  \item Side effects through monads
+  \item Lazy evaluation
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Side effects}
+  \begin{quote}
+    ``... a function or expression is said to have a side effect if, in
+    addition to returning a value, it also modifies some state or has
+    an observable interaction with calling functions or the outside
+    world.''\footnote[frame,1]
+    {Wikipedia contributors, ``Side effect (computer science)''.
+      Wikipedia, The Free Encyclopedia (Accessed June 16, 2014)}
+  \end{quote}
+  \pause
+  \begin{itemize}[<+->]
+  \item Modify global variables
+  \item Write/Read a file
+  \item Thread/Network communication
+  \item IO actions in general
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}{The problem}
+  \begin{quote}
+    ``There is a trend in the software industry to sell `mostly
+    functional' programming as the silver bullet for solving problems
+    developers face with concurrency, parallelism (manycore), and, of
+    course, Big Data.''
+  \end{quote}
+  \pause
+  \begin{itemize}
+  \item MapReduce
+  \item Callbacks
+  \item Deferred execution
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The problem}
+    \begin{quote}
+    ``Just like `mostly secure', `mostly pure' is wishful
+    thinking. The slightest implicit imperative effect erases all the
+    benefits of purity, just as a single bacterium can infect a
+    sterile wound''
+    \footnote[frame,1] {Erik Meijer. 2014. The curse of the
+      excluded middle. Commun. ACM 57, 6 (June 2014),50-55.}
+  \end{quote}
+\end{frame}
+
+
+\begin{frame}[fragile]{The problem}{Deferred execution}
+  \begin{lstlisting}[language=C]
+    static bool LT30(int x) {
+      Console.Write("{0}? < 30\n", x);
+      return x < 30;
+    }
+    static bool MT20(int x) {
+      Console.Write("{0}? > 20\n", x);
+      return x > 20;
+    }
+
+    var q0 = new[]{ 1, 25, 40, 5, 23 }.Where(LT30);
+    var q1 = q1.Where(MT20);
+
+    foreach (var r in q1){
+      Console.WriteLine("[{0}]\n",r);
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{The problem}{Deferred execution (output)}
+\begin{verbatim}
+     1? < 30
+     1? > 20
+     25? < 30
+     25? > 20
+     25
+     40? < 30
+     5? < 30
+     5? > 20
+     23? < 30
+     23 > 20
+     23
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{The problem}{Exceptions and Laziness}
+  \begin{lstlisting}[language=C]
+    var xs = new[]{ 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+    IEnumerable<int> q;
+
+    try   { q = xs.Select(x=>1/x); }
+    catch { q = new int[]; }
+
+    foreach(var z in q){
+      Console.WriteLine(z): // throws here
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Down the Rabbit Hole}{Optimizations}
+  \begin{lstlisting}[language=C]
+    string Ha() {
+      var ha = "Ha";
+      Console.Write(ha);
+      return ha;
+    }
+
+    // prints HaHa
+    var haha = Ha()+Ha();
+
+    // prints Ha
+    var ha = Ha();
+    var haha = ha+ha;
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Abolish state mutation}{Is not enough}
+  \begin{lstlisting}[language=erlang]
+    new_cell(X) -> spawn(fun() -> cell(X) end).
+
+    cell(Val) ->
+      receive
+        {set, NewVal} -> cell(NewVal);
+        {get, Pid}    -> Pid!{return, Val}, cell(Val);
+        {dispose}     -> {}
+      end.
+
+    set_cell(Cell, NewVal) -> Cell!{set, NewVal}.
+    get_cell(Cell) -> Cell!{get, self()},
+      receive
+         {return, Val} -> Val
+      end.
+    dispose_cell(Cell) -> Cell!{dispose}.
+
+  \end{lstlisting}
+\end{frame}
+
+
+\end{document}
