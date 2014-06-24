@@ -90,7 +90,7 @@
 \begin{frame}{Imperative programming}{The problem}
   \begin{quote}
     ``In a parallel/concurrent/distributed world, however, a single
-    global state is an unacceptable bottleneck.so the foundational
+    global state is an unacceptable bottleneck. so the foundational
     assumption of imperative programming that underpins most
     contemporary programming languages is starting to crumble''
   \end{quote}
@@ -139,6 +139,8 @@
     functional' programming as the silver bullet for solving problems
     developers face with concurrency, parallelism (manycore), and, of
     course, Big Data.''
+    \footnote[frame,1] {Erik Meijer. 2014. The curse of the
+      excluded middle. Commun. ACM 57, 6 (June 2014),50-55.}
   \end{quote}
   \pause
   \begin{itemize}[<+->]
@@ -172,7 +174,7 @@
     }
 
     var q0 = new[]{ 1, 25, 40, 5, 23 }.Where(LT30);
-    var q1 = q1.Where(MT20);
+    var q1 = q0.Where(MT20);
 
     foreach (var r in q1){
       Console.WriteLine("[{0}]\n",r);
@@ -227,7 +229,7 @@
   \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Abolish state mutation}{Is not enough}
+\begin{frame}[fragile]{Down the Rabbit Hole}{Abolish state mutation is not enough}
   \begin{lstlisting}[language=erlang]
     new_cell(X) -> spawn(fun() -> cell(X) end).
 
@@ -248,5 +250,47 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}{Down the Rabbit Hole}{Summary}
+  \begin{itemize}[<+->]
+  \item Functional features can be tricky when mixed with imperative programs.
+  \item Imperative programs have side effects are EVERYWHERE.
+  \item Abolish some side effects it's not enough.
+  \item A program without side effects is useless.
+  \end{itemize}
+\end{frame}
 
+\begin{frame}[fragile]{Fundamentalist Functional Programming}{All is (not) lost}
+  \begin{lstlisting}[language=C]
+    int foo(int a, int b);
+  \end{lstlisting}
+  \pause
+  \vspace{1cm}
+  \begin{lstlisting}[language=Haskell]
+    foo :: Int -> Int -> Int
+  \end{lstlisting}
+  \pause
+  \vspace{1cm}
+  \begin{lstlisting}[language=Haskell]
+    foo :: Int -> Int -> IO Int
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Fundamentalist Functional Programming}
+  \begin{quote}
+    ``To understand how fundamentalist functional programming might
+    help solve the concurrency problem, it is important to understand
+    that it is not just imperative programming without side effects,
+    which, as we have seen, is useless''
+    \footnote[frame,1] {Erik Meijer. 2014. The curse of the
+      excluded middle. Commun. ACM 57, 6 (June 2014),50-55.}
+  \end{quote}
+\end{frame}
+
+\begin{frame}[fragile]{Informal Introduction to Monads}
+  \begin{lstlisting}[language=Haskell]
+    class Monad m where
+      (>>=)  :: m a -> (a -> m b) -> m b
+      return :: a -> m a
+  \end{lstlisting}
+\end{frame}
 \end{document}
