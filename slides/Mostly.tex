@@ -264,12 +264,12 @@
     int foo(int a, int b);
   \end{lstlisting}
   \pause
-  \vspace{1cm}
+  \hfill\\
   \begin{lstlisting}[language=Haskell]
     foo :: Int -> Int -> Int
   \end{lstlisting}
   \pause
-  \vspace{1cm}
+  \hfill\\
   \begin{lstlisting}[language=Haskell]
     foo :: Int -> Int -> IO Int
   \end{lstlisting}
@@ -287,10 +287,63 @@
 \end{frame}
 
 \begin{frame}[fragile]{Informal Introduction to Monads}
+
+  \begin{quote}
+    Monads are a way of chaining computations that usually carry some
+    effect
+  \end{quote}
+  \pause
+  \begin{lstlisting}[language=Haskell]
+
+    -- The injection function (return)
+    return :: a -> m a
+    @\pause@
+    -- infix application function (bind)
+    (>>=)  :: m a -> (a -> m b) -> m b
+
+  \end{lstlisting}
+
+
+\end{frame}
+
+\begin{frame}[fragile]{Informal Introduction to Monads}
   \begin{lstlisting}[language=Haskell]
     class Monad m where
       (>>=)  :: m a -> (a -> m b) -> m b
       return :: a -> m a
+
+    fooA :: a -> M b
+
+    fooB :: b -> M c
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Informal Introduction to Monads}{Usefull monads}
+  \pause
+  \begin{itemize}[<+->]
+  \item \texttt{Maybe}
+  \item \texttt{[]}
+  \item \texttt{Either e}
+  \item \texttt{ST}
+  \item \texttt{STM}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Informal Introduction to Monads}{The IO Monad}
+  \begin{lstlisting}
+    readFile :: FilePath -> IO String
+    @\pause@
+    writeFile :: FilePath -> String -> IO ()
+    @\pause@
+    getArgs :: IO [String]
+    @\pause@
+    forkIO :: IO () -> IO ThreadId
+    @\pause@
+    forkProcess :: IO () -> IO ProcessID
+    @\pause@
+    getLine :: IO String
+    @\pause@
+    putStrLn :: String -> IO ()
   \end{lstlisting}
 \end{frame}
 \end{document}
