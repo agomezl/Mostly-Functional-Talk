@@ -10,7 +10,7 @@
 \usepackage{natbib}
 \usepackage{bibentry}
 \usepackage{color}
-\usepackage[spanish]{babel}
+%\usepackage[spanish]{babel}
 \usepackage{amssymb,latexsym}
 \usepackage{xcolor}
 \usepackage{hyperref}
@@ -33,10 +33,9 @@
 \lstset{style=style1,escapeinside=@@}%
 
 
-\title{``Mostly functional'' programming}
-\subtitle{does not work}
+\title{``Mostly functional'' programming does not work}
+
 \author{Alejandro Gómez-Londoño}
-\date{31th March, 2014}
 \institute{EAFIT University}
 
 \begin{document}
@@ -80,10 +79,10 @@
   \end{quote}
   \pause
   \begin{itemize}[<+->]
-  \item There is a global state.
-  \item Variables $\approx$ storage cells.
-  \item Assignments statements $\approx$ fetching and storing.
-  \item Control statements $\approx$ Jump and test instructions.
+  \item There is a global state
+  \item Variables $\approx$ storage cells
+  \item Assignments statements $\approx$ fetching and storing
+  \item Control statements $\approx$ Jump and test instructions
   \end{itemize}
 \end{frame}
 
@@ -93,6 +92,8 @@
     global state is an unacceptable bottleneck. so the foundational
     assumption of imperative programming that underpins most
     contemporary programming languages is starting to crumble''
+    \footnote[frame,1] {Erik Meijer. 2014. The curse of the
+      excluded middle. Commun. ACM 57, 6 (June 2014),50-55.}
   \end{quote}
 
 \end{frame}
@@ -116,12 +117,11 @@
 
 \begin{frame}{Side effects}
   \begin{quote}
-    ``... a function or expression is said to have a side effect if, in
-    addition to returning a value, it also modifies some state or has
-    an observable interaction with calling functions or the outside
-    world.''\footnote[frame,1]
-    {Wikipedia contributors, ``Side effect (computer science)''.
-      Wikipedia, The Free Encyclopedia (Accessed June 16, 2014)}
+    ``A side effect introduces a dependency between the global state of
+    the system and the behaviour of a function ... Side effects are
+    essentially invisible inputs to, or outputs from, functions''
+    \footnote[frame,1] {Bryan O’Sullivan, John Goerzen and Don Stewart
+      (2008). Real World Haskell, p. 27.}
   \end{quote}
   \pause
   \begin{itemize}[<+->]
@@ -252,10 +252,10 @@
 
 \begin{frame}{Down the Rabbit Hole}{Summary}
   \begin{itemize}[<+->]
-  \item Functional features can be tricky when mixed with imperative programs.
-  \item Imperative programs have side effects are EVERYWHERE.
-  \item Abolish some side effects it's not enough.
-  \item A program without side effects is useless.
+  \item Functional features can be tricky when mixed with imperative programs
+  \item Imperative programs have side effects are EVERYWHERE
+  \item Abolish some side effects it's not enough
+  \item A program without side effects is useless
   \end{itemize}
 \end{frame}
 
@@ -287,7 +287,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Informal Introduction to Monads}
-
+  \pause
   \begin{quote}
     Monads are a way of chaining computations that usually carry some
     effect
@@ -312,9 +312,9 @@
       (>>=)  :: m a -> (a -> m b) -> m b
       return :: a -> m a
 
-    fooA :: a -> M b
+    fooA :: a -> Maybe b
 
-    fooB :: b -> M c
+    fooB :: b -> Maybe c
   \end{lstlisting}
 \end{frame}
 
@@ -330,7 +330,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Informal Introduction to Monads}{The IO Monad}
-  \begin{lstlisting}
+  \begin{lstlisting}[language=Haskell]
     readFile :: FilePath -> IO String
     @\pause@
     writeFile :: FilePath -> String -> IO ()
@@ -346,4 +346,21 @@
     putStrLn :: String -> IO ()
   \end{lstlisting}
 \end{frame}
+
+\begin{frame}[fragile]{Informal Introduction to Monads}{The IO Monad}
+  \begin{lstlisting}[language=Haskell]
+    (+) :: Int -> Int -> Int
+
+    odd :: Int -> Bool
+
+    getRandom :: IO Int
+    @\pause@
+    isOdd :: IO Bool
+    isOdd = getRandom >>= \x -> return (odd x)
+    @\pause@
+    unsafePerformIO :: IO a -> a
+  \end{lstlisting}
+\end{frame}
+
+
 \end{document}
